@@ -4,7 +4,14 @@ def load_data():
     return None
 
 def print_menu():
-    return None
+    print("="*33)
+    print("   다음 메뉴 중 하나를 선택하세요.")
+    print("="*33)
+    print("1. 회원 추가")
+    print("2. 회원 목록 보기")
+    print("3. 회원 정보 수정하기")
+    print("4. 회원 삭제")
+    print("5. 종료")
 
 def add_member(members: dict) -> None:
     with open("members.dat", "ab") as f:

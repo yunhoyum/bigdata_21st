@@ -1,14 +1,7 @@
-import member_manager
+import member_manager as mm
 
 while True:
-    print("="*33)
-    print("   다음 메뉴 중 하나를 선택하세요.")
-    print("="*33)
-    print("1. 회원 추가")
-    print("2. 회원 목록 보기")
-    print("3. 회원 정보 수정하기")
-    print("4. 회원 삭제")
-    print("5. 종료")
+    mm.print_menu()
 
     menu = input()
     if menu == "1":
@@ -16,13 +9,13 @@ while True:
         while True:
             print("이름:", end=" ")
             name = input()
-            if member_manager.validate_name(name):
+            if mm.validate_name(name):
                 break
             print("잘못된 입력입니다.")
         while True:
             print("전화번호(ex: 01012345678):", end=" ")
             phone = input()
-            if member_manager.validate_phone(phone):
+            if mm.validate_phone(phone):
                 break
             print("잘못된 입력입니다.")
 
@@ -32,7 +25,7 @@ while True:
         while True:
             print("구분(ex. 가족, 친구, 기타):", end=" ")
             type = input()
-            if member_manager.validate_type(type):
+            if mm.validate_type(type):
                 break
             print("잘못된 입력입니다.")
 
@@ -42,13 +35,13 @@ while True:
             "address" : address,
             "type" : type
         }
-        member_manager.add_member(members)
+        mm.add_member(members)
     elif menu == "2":
-        member_manager.list_members()
+        mm.list_members()
     elif menu == "3":
-        member_manager.update_member()
+        mm.update_member()
     elif menu == "4":
-        member_manager.delete_member()
+        mm.delete_member()
     elif menu == "5":
         print("프로그램이 종료됩니다.")
         break
