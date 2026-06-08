@@ -1,6 +1,9 @@
 import re, pickle
 
+member_datas = []
+
 ###################### 함수 ##########################
+
 
 def load_data():
     with open("members.dat", "rb") as f:
@@ -24,6 +27,7 @@ def add_member(members: dict):
 
 def list_members():
     print(member_datas)
+
     return None
 
 def find_by_name():
@@ -50,68 +54,73 @@ def validate_type(type: str) -> bool:
     return type in ("가족", "친구", "기타")
 
 ###################### main ##########################
-
-member_datas = []
-while True:
+def main():
     try:
         member_datas.append(load_data())
     except FileNotFoundError as e:
         print("파일이 존재하지 않습니다.")
-    try: 
-        if load_data() == []:        # 생성 안 하고 하는 방법 찾아보기
-            raise Exception("데이터가 없습니다.")
-    except pickle.UnpicklingError as e:
-        print(e)
+    # try: 
+    #     if load_data() == []:        # 생성 안 하고 하는 방법 찾아보기
+    #         raise Exception("데이터가 없습니다.")
+    # except pickle.UnpicklingError as e:
+    #     print(e)
+    while True:
+        print_menu()
 
-    print_menu()
+        menu = input()
+        if not menu.isdigit():
+            try:
+                raise Exception("1~5 숫자를 입력해 주세요.")
+            except Exception as e:
+                print(e)
+                continue
 
-    menu = input()
-    if menu == "1":
-        print("등록할 회원의 정보를 입력하세요.")
-        while True:
-            print("이름:", end=" ")
-            name = input()
-            if validate_name(name):
-                break
-            print("잘못된 입력입니다.")
-        while True:
-            print("전화번호(ex: 01012345678):", end=" ")
-            phone = input()
-            if validate_phone(phone):
-                break
-            print("잘못된 입력입니다.")
+        if menu == "1":
+            print("등록할 회원의 정보를 입력하세요.")
+            while True:
+                print("이름:", end=" ")
+                name = input()
+                if validate_name(name):
+                    break
+                print("잘못된 입력입니다.")
+            while True:
+                print("전화번호(ex: 01012345678):", end=" ")
+                phone = input()
+                if validate_phone(phone):
+                    break
+                print("잘못된 입력입니다.")
 
-        print("주소:", end=" ")
-        address = input()
+            print("주소:", end=" ")
+            address = input()
 
-        while True:
-            print("구분(ex. 가족, 친구, 기타):", end=" ")
-            type = input()
-            if validate_type(type):
-                break
-            print("잘못된 입력입니다.")
+            while True:
+                print("구분(ex. 가족, 친구, 기타):", end=" ")
+                type = input()
+                if validate_type(type):
+                    break
+                print("잘못된 입력입니다.")
 
-        members = {
-            "name" : name,
-            "phone" : phone,
-            "address" : address,
-            "type" : type
-        }
-        add_member(members)
-    elif menu == "2":
-        list_members()
-    elif menu == "3":
-        update_member()
-    elif menu == "4":
-        delete_member()
-    elif menu == "5":
-        print("프로그램이 종료됩니다.")
-        break
-    else :
-        try:
-            raise Exception("잘못된 입력입니다.")
-        except Exception as e:
-            print(e)
-
+            members = {
+                "name" : name,
+                "phone" : phone,
+                "address" : address,
+                "type" : type
+            }
+            add_member(members)
+        elif menu == "2":
+            list_members()
+        elif menu == "3":
+            update_member()
+        elif menu == "4":
+            delete_member()
+        elif menu == "5":
+            print("프로그램이 종료됩니다.")
+            break
+        else :
+            try:
+                raise Exception("잘못된 입력입니다.")
+            except Exception as e:
+                print(e)
 
 
+main()
