@@ -37,9 +37,6 @@ def validate_phone(phone: str) -> bool:
 def validate_type(t: str) -> bool:
     return t in ("가족", "친구", "기타")
 
-def input_member():
-    return None
-
 def add_member(members: list):
     print("등록할 회원의 정보를 입력하세요.")
     while True:
@@ -47,13 +44,13 @@ def add_member(members: list):
         name = input()
         if validate_name(name):
             break
-        print("잘못된 입력입니다.")
+        print("이름은 5자 이내로 입력하세요.")
     while True:
         print("전화번호(ex: 01012345678):", end=" ")
         phone = input()
         if validate_phone(phone):
             break
-        print("잘못된 입력입니다.")
+        print("전화번호 형식이 올바르지 않습니다.(예: 01012345678)")
 
     print("주소:", end=" ")
     address = input()
@@ -63,7 +60,7 @@ def add_member(members: list):
         type = input()
         if validate_type(type):
             break
-        print("잘못된 입력입니다.")
+        print("구분은 가족/친구/기타 중 하나여야 합니다.")
 
     member_data = {
         "name" : name,
@@ -80,7 +77,6 @@ def list_members(members):
     print(f"총 {len(members)}명의 회원이 저장되어 있습니다.")
     
     for member in members:
-        m = member
         print(f"회원정보 : 이름 = {member['name']}, 전화번호 : {member['phone']}, 주소 : {member['address']}, 종류 : {member['type']}")
 
 def find_by_name(members, name):
@@ -137,17 +133,19 @@ def delete_member(members):
     print("삭제가 완료되었습니다.")
 
 def duplicated_name(found_names, crud="선택"):
-    print(f"총 {len(found_names)}개의 목록이 검색되었습니다.")
-    print(f"아래의 목록 중 {crud}할 회원의 번호를 입력하세요.")
-    for index, found_name in enumerate(found_names, start=1):
-        print(f"{index}. 이름 = {found_name['name']}, 전화번호 : {found_name['phone']}, 주소 : {found_name['address']}, 구분 : {found_name['type']}")
-    pick_number = input()
-    if int(pick_number) > len(found_names):
-        try:
-            raise Exception("잘못된 번호입니다.")
-        except Exception as e:
-            print(e)
-            return -1
+    while True:
+        print(f"총 {len(found_names)}개의 목록이 검색되었습니다.")
+        print(f"아래의 목록 중 {crud}할 회원의 번호를 입력하세요.")
+        for index, found_name in enumerate(found_names, start=1):
+            print(f"{index}. 이름 = {found_name['name']}, 전화번호 : {found_name['phone']}, 주소 : {found_name['address']}, 구분 : {found_name['type']}")
+        pick_number = input()
+        if int(pick_number) > len(found_names) or int(pick_number) < 1:
+            try:
+                raise Exception("잘못된 번호입니다. 다시 입력하세요.")
+            except Exception as e:
+                print(e)
+                continue
+        break
     return int(pick_number)-1
 
 ###################### main ##########################
@@ -157,30 +155,29 @@ def main():
         while True:
             print_menu()
 
-            menu = input()
-            if not menu.isdigit():
-                try:
-                    raise Exception("1~5 숫자를 입력해 주세요.")
-                except Exception as e:
-                    print(e)
-                    continue
+            
+            try:
+                menu = int(input())
+            except ValueError as e:
+                print("정수 1~5 사이의 값을 입력해 주세요.")
+                continue
 
-            if menu == "1":     # 함수 안에서 만들기
+            if menu == 1:     # 함수 안에서 만들기
                 add_member(members)
-            elif menu == "2":
+            elif menu == 2:
                 members
                 list_members(members)
-            elif menu == "3":
+            elif menu == 3:
                 update_member(members)
-            elif menu == "4":
+            elif menu == 4:
                 delete_member(members)
-            elif menu == "5":
+            elif menu == 5:
                 print("프로그램이 종료됩니다.")
                 save_data(".", members)
                 break
             else :
                 try:
-                    raise Exception("잘못된 입력입니다.")
+                    raise Exception("1~5 숫자를 입력해 주세요.")
                 except Exception as e:
                     print(e)
     except Exception as e:
