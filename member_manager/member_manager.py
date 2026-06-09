@@ -16,8 +16,6 @@ def save_data(path, members):
     with open(path+"/members.dat", "wb") as f:
         return pickle.dump(members, f)
 
-    
-
 def print_menu():
     print("="*33)
     print("   다음 메뉴 중 하나를 선택하세요.")
@@ -102,55 +100,92 @@ def update_member(members):
             raise Exception("해당하는 회원 정보가 없습니다.")
         except Exception as e:
             print(e)
+            return None
     if len(found_names) > 1:
-        print(f"총 {str(found_names)}개의 목록이 검색되었습니다.")
-        print("아래의 목록 중 수정할 회원의 번호를 입력하세요.")
-        for index, found_name in enumerate(found_names, start=1):
-            print(f"{index}. 이름 = {found_name['name']}, 전화번호 : {found_name['phone']}, 주소 : {found_name['address']}, 구분 : {found_name['type']},")
-        pick_number = input()
-        found_name = found_names[int(pick_number)-1]
+        selected_index = duplicated_name(found_names, "수정")
+        if selected_index == -1:
+            return None
     else:
-        found_name = found_names[0]
+        selected_index = 0
+
+    members.pop(selected_index)
+
     print("수정할 정보를 입력하세요.")
     add_member(members)
-    
-    return None
+    print("수정이 완료되었습니다.")
 
 def delete_member(members):
-    return None
+    print("삭제할 회원의 이름을 입력하세요.")
+    print("이름 :", end=" ")
+    name = input()
+    found_names = find_by_name(members, name)
+    
+    if found_names == []:
+        try :
+            raise Exception("해당하는 회원 정보가 없습니다.")
+        except Exception as e:
+            print(e)
+            return None
+    if len(found_names) > 1:
+        selected_index = duplicated_name(found_names, "삭제")
+        if selected_index == -1:
+            return None
+    else:
+        selected_index = 0
+
+    members.pop(selected_index)
+    print("삭제가 완료되었습니다.")
+
+def duplicated_name(found_names, crud="선택"):
+    print(f"총 {len(found_names)}개의 목록이 검색되었습니다.")
+    print(f"아래의 목록 중 {crud}할 회원의 번호를 입력하세요.")
+    for index, found_name in enumerate(found_names, start=1):
+        print(f"{index}. 이름 = {found_name['name']}, 전화번호 : {found_name['phone']}, 주소 : {found_name['address']}, 구분 : {found_name['type']}")
+    pick_number = input()
+    if int(pick_number) > len(found_names):
+        try:
+            raise Exception("잘못된 번호입니다.")
+        except Exception as e:
+            print(e)
+            return -1
+    return int(pick_number)-1
 
 ###################### main ##########################
 def main():
-    members = load_data(".")
-    while True:
-        print_menu()
+    try:
+        members = load_data(".")
+        while True:
+            print_menu()
 
-        menu = input()
-        if not menu.isdigit():
-            try:
-                raise Exception("1~5 숫자를 입력해 주세요.")
-            except Exception as e:
-                print(e)
-                continue
+            menu = input()
+            if not menu.isdigit():
+                try:
+                    raise Exception("1~5 숫자를 입력해 주세요.")
+                except Exception as e:
+                    print(e)
+                    continue
 
-        if menu == "1":     # 함수 안에서 만들기
-            add_member(members)
-        elif menu == "2":
-            members
-            list_members(members)
-        elif menu == "3":
-            update_member(members)
-        elif menu == "4":
-            delete_member()
-        elif menu == "5":
-            print("프로그램이 종료됩니다.")
-            save_data(".", members)
-            break
-        else :
-            try:
-                raise Exception("잘못된 입력입니다.")
-            except Exception as e:
-                print(e)
-
+            if menu == "1":     # 함수 안에서 만들기
+                add_member(members)
+            elif menu == "2":
+                members
+                list_members(members)
+            elif menu == "3":
+                update_member(members)
+            elif menu == "4":
+                delete_member(members)
+            elif menu == "5":
+                print("프로그램이 종료됩니다.")
+                save_data(".", members)
+                break
+            else :
+                try:
+                    raise Exception("잘못된 입력입니다.")
+                except Exception as e:
+                    print(e)
+    except Exception as e:
+        print(e)
+    finally:
+        save_data(".", members)
 
 main()
