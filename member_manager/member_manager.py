@@ -84,14 +84,8 @@ def add_member(members: list) -> None:
         else: 
             validate += 1
 
-        one = duplicated_phone(members, phone)
-        validate = validate + one
-        # for member in members:
-        #     if member["phone"] == phone:
-        #         print("이미 등록된 번호가 있습니다.")
-        #         break
-        # else:
-        #     validate += 1
+        validate += duplicated_phone(members, phone)
+
         if validate == 2 :
             break
     print("주소:", end=" ")
