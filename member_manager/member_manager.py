@@ -196,6 +196,7 @@ def duplicated_name(found_names: list, crud: str) -> int:
 def main() -> None:
     try:
         members = load_data(".")
+        print(members)
         while True:
             print_menu()
 
