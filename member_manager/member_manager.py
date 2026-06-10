@@ -46,19 +46,19 @@ def duplicated_phone(members: list, phone: str) -> int:
     for member in members:
         if member["phone"] == phone:
             try:
-                raise Exception("이미 등록된 번호가 있습니다.")
+                raise Exception("이미 등록된 전화번호가 있습니다.")
             except Exception as e:
                 print(e)
-                return 0
+                return False
     else:
-        return 1
+        return True
 
 # 1. 회원 추가 > 구분 등록 > 유효성 검사(구분 유형 일치 여부 확인)
 def validate_type(t: str) -> bool:
     return t in ("가족", "친구", "기타")
 
-# 1. 회원 추가
-def add_member(members: list) -> None:
+# 1. 회원 추가 > 유효성 검사
+def input_member() -> dict:
     print("등록할 회원의 정보를 입력하세요.")
     while True:
         print("이름:", end=" ")
@@ -68,11 +68,9 @@ def add_member(members: list) -> None:
                 raise Exception("이름은 5자 이내로 입력하세요.")
             except Exception as e:
                 print(e)
-                continue
         else:
             break
     while True:
-        validate=0
         print("전화번호(ex: 01012345678):", end=" ")
         phone = input()
         if not validate_phone(phone):
@@ -80,16 +78,12 @@ def add_member(members: list) -> None:
                 raise Exception("전화번호 형식이 올바르지 않습니다.(예: 01012345678)")
             except Exception as e:
                 print(e)
-                continue
-        else: 
-            validate += 1
-
-        validate += duplicated_phone(members, phone)
-
-        if validate == 2 :
+        else:
             break
+
     print("주소:", end=" ")
     address = input()
+
     while True:
         print("구분(ex. 가족, 친구, 기타):", end=" ")
         type = input()
@@ -98,17 +92,22 @@ def add_member(members: list) -> None:
                 raise Exception("구분은 가족/친구/기타 중 하나여야 합니다.")
             except Exception as e:
                 print(e)
-                continue
         else:
             break
 
-    member_data = {
+    return {
         "name" : name,
         "phone" : phone,
         "address" : address,
         "type" : type
     }
-    members.append(member_data)
+
+# 1. 회원 추가
+def add_member(members: list) -> None:
+    member_data = input_member()
+    if duplicated_phone(members, member_data["phone"]):
+        members.append(member_data)
+        print("등록이 완료되었습니다.")
 
 # 2. 회원 목록 보기 선택 시 전체 회원 출력
 def list_members(members: list) -> None:
