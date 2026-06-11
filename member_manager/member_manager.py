@@ -33,6 +33,7 @@ def print_menu() -> None:
 
 # 1. 회원 추가 > 이름 등록 > 유효성 검사(이름 1~5 자 사이)
 def validate_name(name: str) -> bool:
+
     return 1 <= len(name) <= 5
 
 # 1. 회원 추가 > 휴대폰 번호 등록 > 유효성 검사(휴대폰 번호 010으로 시작하는 11개 번호)
@@ -158,7 +159,7 @@ def delete_member(members: list) -> None:
     print("이름 :", end=" ")
     name = input()
     found_names = find_by_name(members, name)
-    
+
     if found_names == []:
         try :
             raise Exception("해당하는 회원 정보가 없습니다.")
@@ -192,11 +193,12 @@ def duplicated_name(found_names: list, crud: str) -> int:
         break
     return int(pick_number)-1
 
-###################### main ##########################
 def main() -> None:
     try:
         members = load_data(".")
-        print(members)
+        if members == [] :
+            print(members)
+
         while True:
             print_menu()
 
@@ -229,4 +231,5 @@ def main() -> None:
     finally:
         save_data(".", members)
 
+###################### main ##########################
 main()
